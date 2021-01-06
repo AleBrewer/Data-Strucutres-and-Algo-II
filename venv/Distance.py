@@ -1,12 +1,23 @@
 import csv
-from ImportCVS import insert_package
+import datetime
+from ImportCVS import package_List
 
 with open('WGUPS Distance Table.csv') as csv_file:
     reader_csv = csv.reader(csv_file, delimiter=',')
 
+    # Create Truck lists with their packages
+    truck_One = [1, 4, 6, 12, 17, 21, 25, 28, 31, 32, 40]
+    truck_Two = [2, 3, 5, 7, 8, 9, 10, 18, 27, 29, 30, 33, 35, 36, 37, 38]
+    truck_Three = [11, 13, 14, 15, 16, 19, 20, 22, 23, 24, 26, 34, 39]
+
+    truck_One_Optimzed = []
+    truck_Two_Optimzed = []
+    truck_Three_Optimzed = []
+
+    # Create Empty List of Distances
     distance_List = []
 
-
+    #Create a 2D array for Location Distances
     for row in reader_csv:
 
         row0 = row[0]
@@ -68,6 +79,31 @@ with open('WGUPS Distance Table.csv') as csv_file:
 
         distance_List.append(data_row)
 
-    print(distance_List[10][4])
+    current_LocationID = 0
+    truck_One_List_Length =  truck_One.__len__()
+
+    for length in range(0, truck_One_List_Length):
+
+        shortest_Distance = 20.00
+        shortest_DistanceID = 0
+        iteration = 0
+        for item in truck_One:
+
+            item_Address_ID = package_List.get(item - 1)[7]
+            distance = distance_List[current_LocationID][item_Address_ID]
+
+            if(float(distance) < float(shortest_Distance)):
+                shortest_Distance = distance
+                shortest_DistanceID = item
+                shortest_Distance_Index = iteration
+
+            iteration = iteration + 1
+
+        current_LocationID = package_List.get(shortest_DistanceID - 1)[7]
+        truck_One.pop(shortest_Distance_Index)
+        truck_One_Optimzed.append(shortest_DistanceID)
 
 
+
+
+    print(truck_One_Optimzed)

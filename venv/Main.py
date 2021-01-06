@@ -1,4 +1,4 @@
-from ImportCVS import insert_package
+from ImportCVS import package_List
 import Distance
 
 class Main:
@@ -14,12 +14,12 @@ class Main:
 
         if start == '1':
 
-            print(insert_package.get(1))
-            print(insert_package.get(1)[2])
+            print(package_List.get(1))
+            print(package_List.get(1)[2])
 
-            insert_package.update(1,7,8)
+            package_List.update(1,7,8)
 
-            print(insert_package.get(1))
+            print(package_List.get(1))
 
 
             exit()
@@ -40,11 +40,11 @@ class Main:
 
         if start == '3':
 
-            print(insert_package.get(0))
-            print(insert_package.get(1))
-            print(insert_package.get(2))
-            print(insert_package.get(3))
-            print(insert_package.get(4))
+            print(package_List.get(0))
+            print(package_List.get(1))
+            print(package_List.get(2))
+            print(package_List.get(3))
+            print(package_List.get(4))
             exit()
 
         elif start == 'exit':
