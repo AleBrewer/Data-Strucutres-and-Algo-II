@@ -1,5 +1,5 @@
 from ImportCVS import insert_package
-#from HashTable import Hash_Map
+import Distance
 
 class Main:
 
@@ -19,21 +19,32 @@ class Main:
 
             insert_package.update(1,7,8)
 
-
             print(insert_package.get(1))
-
-
 
 
             exit()
 
         if start == '2':
             # Creates a list containing 5 lists, each of 8 items, all set to 0
-            Matrix = [[0]*5 for i in range(5)]
-            Matrix [0][0] = "Moo"
+            test1 = "Happy"
+            test2 = "Happy"
+            test3 = "sad"
 
-            print (Matrix)
+            if test1 == test2:
+                print("Equal")
 
+            if test2 == test3:
+                print("Not Equal")
+
+            exit()
+
+        if start == '3':
+
+            print(insert_package.get(0))
+            print(insert_package.get(1))
+            print(insert_package.get(2))
+            print(insert_package.get(3))
+            print(insert_package.get(4))
             exit()
 
         elif start == 'exit':

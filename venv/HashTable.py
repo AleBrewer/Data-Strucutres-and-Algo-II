@@ -1,45 +1,22 @@
 class Hash_Map:
 
     # Constructor with initial capacity
-    # Makes all buckets in table empty
-    def __init__(self, initial_capacity=41):
-
+    # Complexity O(1)
+    def __init__(self, initial_capacity=10):
         self.table = []
-        for i in range(initial_capacity):
-            self.table.append([])
 
+    #Adds an item to the table at the key
     def add(self, key, value):
         self.table.insert(key, value)
 
+    #Gets an item from the Hash table with the key
     def get(self, key):
         get_item = self.table.__getitem__(key)
         return get_item
 
+    #Removes the old item at the desired location and inserts the new one
     def update(self, key, item, value):
         get_item = self.table.__getitem__(key)
         get_item.pop(item)
         get_item.insert(item, value)
-
-
-
-        #if self.table[key_hash] is not None:
-        #    for pair in self.table[key_hash]:
-        #        if pair[0] == key:
-        #            pair[1] = value
-        #            print(pair[1])
-        #            return True
-        #else:
-        #    print ("Error")
-
-
-
-        #get_item = self.table.__getitem__(key)
-        #get_item.append(value)
-
-        print("sadness")
-        #update_item = self.table.__setitem__(key)
-        #self.table.append(value)
-
-
-
 
