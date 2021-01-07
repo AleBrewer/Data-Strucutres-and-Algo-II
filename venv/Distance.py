@@ -1,5 +1,6 @@
 import csv
 import datetime
+import time
 from ImportCVS import package_List
 
 with open('WGUPS Distance Table.csv') as csv_file:
@@ -79,17 +80,24 @@ with open('WGUPS Distance Table.csv') as csv_file:
 
         distance_List.append(data_row)
 
-    current_LocationID = 0
-    truck_One_List_Length =  truck_One.__len__()
 
-    for length in range(0, truck_One_List_Length):
+# Main Algorithm used to optimized package lists
+# O(N^2)
+def optimize_List(truck_Package_List):
+
+    current_LocationID = 0
+    truck_List_Length = truck_Package_List.__len__()
+    optimize_Package_List = []
+
+    for length in range(0, truck_List_Length):
 
         shortest_Distance = 20.00
         shortest_DistanceID = 0
         iteration = 0
-        for item in truck_One:
 
-            item_Address_ID = package_List.get(item - 1)[7]
+        for item in truck_Package_List:
+
+            item_Address_ID = package_List.get(item - 1)[9]
             distance = distance_List[current_LocationID][item_Address_ID]
 
             if(float(distance) < float(shortest_Distance)):
@@ -99,11 +107,59 @@ with open('WGUPS Distance Table.csv') as csv_file:
 
             iteration = iteration + 1
 
-        current_LocationID = package_List.get(shortest_DistanceID - 1)[7]
-        truck_One.pop(shortest_Distance_Index)
-        truck_One_Optimzed.append(shortest_DistanceID)
+        current_LocationID = package_List.get(shortest_DistanceID - 1)[9]
+        truck_Package_List.pop(shortest_Distance_Index)
+        optimize_Package_List.append(shortest_DistanceID)
+
+    return optimize_Package_List
+
+# Function takes in a list, delivers the packages and returns the distance traveled
+# Complexity O(N)
+def deliver_Packages(truck_Package_List, truck_departure_time):
+
+    distance_and_Time = []
+    distance_Traveled = 0.0
+    current_LocationID = 0
+
+    #Truck has left, set all items to "en route"
+    for item in truck_Package_List:
+        package_List.update(item - 1, 10, "en route")
+        package_List.update(item - 1, 7, truck_departure_time)
+
+    truck_Time = datetime.datetime.strptime(truck_departure_time, '%H:%M:%S')
+
+
+    for item in truck_Package_List:
+        #Get item address
+        item_Address_ID = package_List.get(item - 1)[9]
+
+        #Get distacne from current location to next item in the list and add the distance to distacne traveld
+        distance = distance_List[current_LocationID][item_Address_ID]
+        distance_Traveled = distance_Traveled + float(distance)
+
+        #Update the current location to new location and update that package was delivered
+        current_LocationID = package_List.get(item - 1)[9]
+        package_List.update(item - 1, 10, "Delivered")
+        truck_Time = (truck_Time + datetime.timedelta(hours=(float(distance) / 18)))
+        package_List.update(item - 1, 8, truck_Time.strftime('%H:%M:%S'))
+
+
+
+    distance_Traveled = distance_Traveled + float(distance_List[current_LocationID][0])
+    distance_and_Time.append(distance_Traveled)
+    distance_and_Time.append(truck_Time)
+
+    return distance_and_Time
 
 
 
 
-    print(truck_One_Optimzed)
+
+
+
+
+
+
+
+
+
