@@ -24,19 +24,6 @@ class Main:
 
             exit()
 
-        if start == '2':
-            # Creates a list containing 5 lists, each of 8 items, all set to 0
-            test1 = "Happy"
-            test2 = "Happy"
-            test3 = "sad"
-
-            if test1 == test2:
-                print("Equal")
-
-            if test2 == test3:
-                print("Not Equal")
-
-            exit()
 
         if start == '3':
 
