@@ -115,7 +115,7 @@ def optimize_List(truck_Package_List):
 
 # Function takes in a list, delivers the packages and returns the distance traveled
 # Complexity O(N)
-def deliver_Packages(truck_Package_List, truck_departure_time):
+def deliver_Packages(truck_Package_List, truck_departure_time, end_time):
 
     distance_and_Time = []
     distance_Traveled = 0.0
@@ -127,25 +127,35 @@ def deliver_Packages(truck_Package_List, truck_departure_time):
         package_List.update(item - 1, 7, truck_departure_time)
 
     truck_Time = datetime.datetime.strptime(truck_departure_time, '%H:%M:%S')
+    check_end = datetime.datetime.strptime(end_time, '%H:%M:%S')
 
 
     for item in truck_Package_List:
-        #Get item address
+        #Get item addressID
         item_Address_ID = package_List.get(item - 1)[9]
 
-        #Get distacne from current location to next item in the list and add the distance to distacne traveld
+        #Get distacne from current location to next item in the list and add the distance to distance traveled
         distance = distance_List[current_LocationID][item_Address_ID]
         distance_Traveled = distance_Traveled + float(distance)
 
-        #Update the current location to new location and update that package was delivered
+        #Update the current location to new location and update that the package was delivered
         current_LocationID = package_List.get(item - 1)[9]
         package_List.update(item - 1, 10, "Delivered")
         truck_Time = (truck_Time + datetime.timedelta(hours=(float(distance) / 18)))
+
+        #Used to stop deliveries and check packages at a user given time
+        if(truck_Time > check_end):
+            break
+
+        #Update Delivery time for each item
         package_List.update(item - 1, 8, truck_Time.strftime('%H:%M:%S'))
 
 
-
+    #Get the distance and time from the last location back to the HUB and add it to truck distance and time
     distance_Traveled = distance_Traveled + float(distance_List[current_LocationID][0])
+    #truck_Time = (truck_Time + datetime.timedelta(hours=(float(distance) / 18)))
+
+    #Add final values to list and return the list
     distance_and_Time.append(distance_Traveled)
     distance_and_Time.append(truck_Time)
 
