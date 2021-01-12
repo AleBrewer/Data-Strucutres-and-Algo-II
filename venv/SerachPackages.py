@@ -1,20 +1,25 @@
 from ImportCVS import package_List
 
+#Takes in the Users input and location for the item they are searching
 def search_List(search_Critrea, search_Critrea_ID):
 
+    #Create and empty list for items found
     packages_Found = []
     package_Length = package_List.table.__len__()
 
+    #Check Hash table for user criteria
     for package in range(0, package_Length):
         if search_Critrea == package_List.get(package)[search_Critrea_ID]:
             packages_Found.append(package_List.get(package))
 
+    #Print all items found or print "No Packages found"
     if packages_Found.__len__() > 0:
         for package in packages_Found:
             print(package)
     else:
         print("No packages found")
 
+#Option for the User to serach for package(s)
 def search_Options():
 
     print("")

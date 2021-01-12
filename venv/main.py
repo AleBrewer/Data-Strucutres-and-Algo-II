@@ -14,8 +14,7 @@ class Main:
     print("")
     print("--------------WGUPS Package Delivery System--------------")
 
-
-    #Options of main menu
+    #Options of the main menu
     def main_Menu():
         print("")
         print("Main Menu:")
@@ -35,12 +34,15 @@ class Main:
 
         # Deliver Packages and return time total time and distance
         if start == '1':
-            deliveryTrucks()
+            deliveryTrucks(start, '')
             start = main_Menu()
 
         elif start == '2':
-
-            start = input("Command: ")
+            print("")
+            print("Type time as HH:MM:SS")
+            time_Check = input("Check packages at time: ")
+            deliveryTrucks(start, time_Check)
+            start = main_Menu()
 
         #Search Package Options
         elif start == '3':

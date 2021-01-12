@@ -7,7 +7,7 @@ with open('WGUPS Package Info.csv') as csv_file:
     #Calls Hashmap to create an object
     package_List = Hash_Map()
 
-    #Creates Packages and puts them into the hash time
+    #Creates Packages and puts them into the hash table
     #Complexity O(N)
     for row in reader_csv:
         package_ID = row[0]
@@ -47,6 +47,7 @@ with open('WGUPS Location Names.csv') as csv_file:
     location_List =[]
 
     #Creates a list from the data table
+    #Space Time O(N)
     for row in reader_csv:
         location = row[0]
         location_List.append(location)
@@ -70,9 +71,5 @@ with open('WGUPS Location Names.csv') as csv_file:
                 package_List.update(i,9,j)
             j = j + 1
         i = i + 1
-
-
-
-
 
 

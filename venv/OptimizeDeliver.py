@@ -73,7 +73,11 @@ with open('WGUPS Distance Table.csv') as csv_file:
 
 
 # Main Algorithm used to optimized package lists
-# O(N^2)
+# This Algorithm uses a greedy approach to find an efficent route to deliver packages.
+# The algorithm sets the current location to the HUB. It then looks for the closest
+# address and adds that to the Optimzied list. It takes that item out of the list and
+# repeats until the Unoptimzed list is empty. It then returns the Optimzed list.
+# Space Time O(N^2)
 def optimize_List(truck_Package_List):
 
     current_LocationID = 0
@@ -98,69 +102,70 @@ def optimize_List(truck_Package_List):
 
             iteration = iteration + 1
 
+        #Update Current location
         current_LocationID = package_List.get(shortest_DistanceID - 1)[9]
+
+        #Remove item from unoptimzed list
         truck_Package_List.pop(shortest_Distance_Index)
+
+        #Add item to optimzied list
         optimize_Package_List.append(shortest_DistanceID)
 
     return optimize_Package_List
 
 # Function takes in a list, delivers the packages and returns the distance traveled
+# Function can also deliver packages until a user selected time and prints the list of packages
 # Complexity O(N)
 def deliver_Packages(truck_Package_List, truck_departure_time, end_time):
 
     distance_and_Time = []
     distance_Traveled = 0.0
     current_LocationID = 0
-
-    #Truck has left, set all items to "en route"
-    for item in truck_Package_List:
-        package_List.update(item - 1, 10, "en route")
-        package_List.update(item - 1, 7, truck_departure_time)
-
     truck_Time = datetime.datetime.strptime(truck_departure_time, '%H:%M:%S')
-    check_end = datetime.datetime.strptime(end_time, '%H:%M:%S')
+
+    # If the User Inputs time correctly, proceed with delivers, else throw exception
+    try:
+        check_end = datetime.datetime.strptime(end_time, '%H:%M:%S')
+
+        # If Truck has left, set all items to "en route"
+        if (truck_Time < check_end):
+            for item in truck_Package_List:
+                package_List.update(item - 1, 10, "en route")
+                package_List.update(item - 1, 7, truck_departure_time)
 
 
-    for item in truck_Package_List:
-        #Get item addressID
-        item_Address_ID = package_List.get(item - 1)[9]
+        for item in truck_Package_List:
 
-        #Get distacne from current location to next item in the list and add the distance to distance traveled
-        distance = distance_List[current_LocationID][item_Address_ID]
-        distance_Traveled = distance_Traveled + float(distance)
+            # Used to stop deliveries and check packages at a user given time
+            if (truck_Time > check_end):
+                break
 
-        #Update the current location to new location and update that the package was delivered
-        current_LocationID = package_List.get(item - 1)[9]
-        package_List.update(item - 1, 10, "Delivered")
-        truck_Time = (truck_Time + datetime.timedelta(hours=(float(distance) / 18)))
+            #Get item addressID
+            item_Address_ID = package_List.get(item - 1)[9]
 
-        #Used to stop deliveries and check packages at a user given time
-        if(truck_Time > check_end):
-            break
+            #Get distacne from current location to next item in the list and add the distance to distance traveled
+            distance = distance_List[current_LocationID][item_Address_ID]
+            distance_Traveled = distance_Traveled + float(distance)
 
-        #Update Delivery time for each item
-        package_List.update(item - 1, 8, truck_Time.strftime('%H:%M:%S'))
+            #Update the current location to new location and update that the package was delivered
+            current_LocationID = package_List.get(item - 1)[9]
+            truck_Time = (truck_Time + datetime.timedelta(hours=(float(distance) / 18)))
 
-
-    #Get the distance and time from the last location back to the HUB and add it to truck distance and time
-    distance_Traveled = distance_Traveled + float(distance_List[current_LocationID][0])
-    #truck_Time = (truck_Time + datetime.timedelta(hours=(float(distance) / 18)))
-
-    #Add final values to list and return the list
-    distance_and_Time.append(distance_Traveled)
-    distance_and_Time.append(truck_Time)
-
-    return distance_and_Time
+            #Update Delivery time for each item
+            package_List.update(item - 1, 10, "Delivered")
+            package_List.update(item - 1, 8, truck_Time.strftime('%H:%M:%S'))
 
 
+        #Get the distance and time from the last location back to the HUB and add it to truck distance and time
+        distance_Traveled = distance_Traveled + float(distance_List[current_LocationID][0])
+        #truck_Time = (truck_Time + datetime.timedelta(hours=(float(distance) / 18)))
 
+        #Add final values to list and return the list
+        distance_and_Time.append(distance_Traveled)
+        distance_and_Time.append(truck_Time)
 
+        return distance_and_Time
 
-
-
-
-
-
-
-
-
+    except:
+        print("Invalid time")
+        return 1
